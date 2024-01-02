@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8.0.35
+    platform: linux/amd64
+    environment:
+      MYSQL_USER: user
+      MYSQL_ROOT_PASSWORD: pass
+    volumes:
+      - mysql_data:/var/lib/mysql
+  web:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/rails-sandbox/
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+volumes:
+  mysql_data:
